@@ -1,5 +1,6 @@
 package org.svgroz;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Consumer;
@@ -13,22 +14,23 @@ public class BTree<T> {
     }
 
     private final Node<T> root;
+    private final Comparator<T> comparator;
 
-    public BTree(T rootValue) {
+    public BTree(T rootValue, Comparator<T> comparator) {
         this.root = new Node<>();
         this.root.parent = null;
         this.root.value = rootValue;
+        this.comparator = comparator;
     }
 
-    @SuppressWarnings("unchecked")
     public void add(T value) {
         Node<T> currentNode = root;
         Node<T> newNode = new Node<>();
         newNode.value = value;
         boolean added = false;
         do {
-            Comparable currentValue = (Comparable) currentNode.value;
-            int compareResult = currentValue.compareTo(value);
+            T currentValue = currentNode.value;
+            int compareResult = comparator.compare(currentValue, value);
 
             if (compareResult < 0) {
                 Node<T> left = currentNode.left;
@@ -55,13 +57,12 @@ public class BTree<T> {
         } while (!added);
     }
 
-    @SuppressWarnings("unchecked")
     public boolean any(T value) {
         Node<T> currentNode = root;
 
         while (currentNode != null) {
-            Comparable nodeValue = (Comparable) currentNode.value;
-            int compareResult = nodeValue.compareTo(value);
+            T nodeValue = currentNode.value;
+            int compareResult = comparator.compare(nodeValue, value);
             if (compareResult < 0) {
                 currentNode = currentNode.left;
             } else if (compareResult > 0) {

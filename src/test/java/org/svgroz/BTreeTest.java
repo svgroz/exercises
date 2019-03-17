@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
-
 public class BTreeTest {
     BTree<Integer> integerBTree;
     final List<Integer> randomList = new ArrayList<>();
@@ -18,7 +16,7 @@ public class BTreeTest {
     public void before() {
         Random random = new Random();
 
-        integerBTree = new BTree<>(random.nextInt());
+        integerBTree = new BTree<>(random.nextInt(), Integer::compareTo);
 
         for (int i = 0; i < 100; i++) {
             int nextInt = random.nextInt();
@@ -29,7 +27,9 @@ public class BTreeTest {
 
     @Test
     public void test1() {
-        final Integer toFind = randomList.stream().findAny().get();
-        Assert.assertTrue(integerBTree.any(toFind));
+        for (int i = 0; i < 10; i++) {
+            final Integer toFind = randomList.stream().findAny().get();
+            Assert.assertTrue(integerBTree.any(toFind));
+        }
     }
 }
